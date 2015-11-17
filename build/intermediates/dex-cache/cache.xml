@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/Aki/ucsd/cse190/StreetClash/app/build/intermediates/exploded-aar/StreetClash/VolleyFramework/unspecified/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="8a49b6c3d12f625ec3a09726e11685568571b5c0">
+        <dex dex="/Users/Aki/ucsd/cse190/StreetClash/app/build/intermediates/pre-dexed/debug/classes-fc4ab7956c75467d8a2ee92d0969c7cfffb788a3.jar" />
+    </item>
+
+</items>
