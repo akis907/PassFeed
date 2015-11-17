@@ -20,9 +20,9 @@ public class ProfileLib {
 
     private ProfileLib(Context context){
         lib = new ArrayList<Profile>();
-        for(int i=0; i<100; ++i){
+        for(int i=0; i<10; ++i){
             Profile pro = new Profile();
-            pro.setMname("");
+            pro.setMname("my name is "+i+'0');
             pro.setMusername("");
             //pro.setPhoto();
             lib.add(pro);

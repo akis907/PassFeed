@@ -12,14 +12,14 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/profile_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="400dp"/>
+        android:layout_height="450dp"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="20dp"
         android:weightSum="1"
-        android:layout_weight="0.28">
+        android:layout_weight="0.1">
 
         <ImageButton
             android:layout_width="128dp"

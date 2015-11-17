@@ -9,15 +9,19 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.support.v7.widget.helper.ItemTouchHelper;
+//import co.paulburke.android.itemtouchhelperdemo.helper.SimpleItemTouchHelperCallback;
 import java.util.List;
-
+import java.util.Collections;
+import android.graphics.Color;
+import android.support.v7.widget.RecyclerView.ItemDecoration;
 /**
  * Created by Aki on 11/12/15.
  */
 public class ProfileListFragment extends Fragment{
     private RecyclerView mProfileRecyclerView;
     private ProfileAdapter mAdapter;
+    private ItemTouchHelper mItemTouchHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -28,6 +32,7 @@ public class ProfileListFragment extends Fragment{
 
         updateUI();
 
+
         return view;
     }
 
@@ -37,9 +42,13 @@ public class ProfileListFragment extends Fragment{
 
         mAdapter = new ProfileAdapter(profiles);
         mProfileRecyclerView.setAdapter(mAdapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(mProfileRecyclerView);
     }
 
-    private class ProfileHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private class ProfileHolder extends RecyclerView.ViewHolder implements
+            ItemTouchHelperViewHolder{
         private TextView mNameView;
         private ImageView mPhotoView;
 
@@ -47,7 +56,7 @@ public class ProfileListFragment extends Fragment{
 
         public ProfileHolder(View itemView){
             super(itemView);
-            itemView.setOnClickListener(this);
+            //itemView.setOnClickListener(this);
 
             mNameView = (TextView) itemView.findViewById(R.id.list_item_profile_name_text_view);
             mPhotoView = (ImageView) itemView.findViewById(R.id.list_item_profile_photo_image_view);
@@ -55,25 +64,35 @@ public class ProfileListFragment extends Fragment{
 
         public void bindProfile (Profile profile){
             mProfile = profile;
-            //mNameView.setText(mProfile.getMname());
+            mNameView.setText(mProfile.getMname());
             //mPhotoView.setImageDrawable(null);
         }
 
-        @Override
-        public void onClick(View v){
+        /*@Override*/
+        /*public void onClick(View v){
             Toast.makeText(getActivity(), mProfile.getMname() + "clicked!", Toast.LENGTH_SHORT).show();
+        }*/
+        @Override
+        public void onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            itemView.setBackgroundColor(0);
         }
     }
 
-    private class ProfileAdapter extends RecyclerView.Adapter<ProfileHolder>{
+    private class ProfileAdapter extends RecyclerView.Adapter<ProfileHolder>implements ItemTouchHelperAdapter{
         private List<Profile> mProfiles;
 
         public ProfileAdapter(List<Profile> profiles){mProfiles = profiles;}
 
         @Override
         public ProfileHolder onCreateViewHolder(ViewGroup parent, int viewType){
-            LayoutInflater layoutInfalter = LayoutInflater.from(getActivity());
-            View view = layoutInfalter.inflate(R.layout.list_item_profile, parent, false);
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View view = layoutInflater.inflate(R.layout.list_item_profile, parent, false);
+
             return new ProfileHolder(view);
         }
 
@@ -81,12 +100,40 @@ public class ProfileListFragment extends Fragment{
         public void onBindViewHolder(ProfileHolder holder, int position){
             Profile profile = mProfiles.get(position);
             holder.bindProfile(profile);
+
+
+            // Drag From Left
         }
 
         @Override
         public int getItemCount(){
             return mProfiles.size();
         }
+
+        @Override
+        public void onItemDismiss(int position) {
+            mProfiles.remove(position);
+            notifyItemRemoved(position);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public boolean onItemMove(int fromPosition, int toPosition) {
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(mProfiles, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(mProfiles, i, i - 1);
+                }
+            }
+            notifyItemMoved(fromPosition, toPosition);
+            return true;
+        }
+
+
     }
+
 }
 
